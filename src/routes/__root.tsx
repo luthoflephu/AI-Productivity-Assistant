@@ -8,7 +8,7 @@ import {
   Scripts,
 } from "@tanstack/react-router";
 import { useEffect, type ReactNode } from "react";
-import { Moon, Sun, ShieldCheck } from "lucide-react";
+import { Moon, Sun, Sparkles } from "lucide-react";
 
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
@@ -72,14 +72,14 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "ScamGuard AI — Intelligent Fraud Detection & Response" },
+      { title: "WorkflowAI — AI Workplace Productivity Assistant" },
       {
         name: "description",
         content:
-          "AI-powered scam detection, safe response generation, scam research, and recovery planning for everyday users and professionals.",
+          "AI-powered email drafting, meeting summarization, task planning, research, and chat — all in one modern productivity workspace.",
       },
-      { property: "og:title", content: "ScamGuard AI" },
-      { property: "og:description", content: "Intelligent Fraud Detection & Response Assistant." },
+      { property: "og:title", content: "WorkflowAI" },
+      { property: "og:description", content: "AI Workplace Productivity Assistant for modern professionals." },
       { property: "og:type", content: "website" },
     ],
     links: [{ rel: "stylesheet", href: appCss }],
@@ -122,12 +122,12 @@ function AppShell() {
           <header className="sticky top-0 z-30 flex h-14 items-center gap-2 border-b bg-background/80 px-3 backdrop-blur sm:px-6">
             <SidebarTrigger />
             <div className="flex items-center gap-2 md:hidden">
-              <ShieldCheck className="h-4 w-4 text-primary" />
-              <span className="text-sm font-semibold">ScamGuard AI</span>
+              <Sparkles className="h-4 w-4 text-primary" />
+              <span className="text-sm font-semibold">WorkflowAI</span>
             </div>
             <div className="ml-auto flex items-center gap-2">
               <span className="hidden text-xs text-muted-foreground sm:inline">
-                Advisory only · verify with official sources
+                AI drafts — always review before sending
               </span>
               <ThemeToggle />
             </div>

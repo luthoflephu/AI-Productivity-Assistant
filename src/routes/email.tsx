@@ -9,43 +9,45 @@ import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Disclaimer } from "@/components/Disclaimer";
-import { generateSafeEmail } from "@/lib/scam.functions";
+import { generateEmail } from "@/lib/productivity.functions";
 import { toast } from "sonner";
 
-export const Route = createFileRoute("/email")({ component: EmailGenPage });
+export const Route = createFileRoute("/email")({ component: EmailPage });
 
-type Tone = "Formal" | "Friendly" | "Professional" | "Assertive";
-type Result = Awaited<ReturnType<typeof generateSafeEmail>>;
+type Tone = "Formal" | "Friendly" | "Professional" | "Concise" | "Persuasive";
+type Length = "Short" | "Medium" | "Long";
+type Result = Awaited<ReturnType<typeof generateEmail>>;
 
-function EmailGenPage() {
-  const run = useServerFn(generateSafeEmail);
-  const [original, setOriginal] = useState("");
-  const [goal, setGoal] = useState("Politely decline and request verification through official channels.");
+function EmailPage() {
+  const run = useServerFn(generateEmail);
+  const [purpose, setPurpose] = useState("");
+  const [recipient, setRecipient] = useState("");
+  const [context, setContext] = useState("");
   const [tone, setTone] = useState<Tone>("Professional");
+  const [length, setLength] = useState<Length>("Medium");
   const [subject, setSubject] = useState("");
   const [body, setBody] = useState("");
   const [alts, setAlts] = useState<Result["alternatives"]>([]);
-  const [notes, setNotes] = useState<string[]>([]);
+  const [tips, setTips] = useState<string[]>([]);
   const [loading, setLoading] = useState(false);
 
   const copy = (t: string) => { navigator.clipboard.writeText(t); toast.success("Copied"); };
 
   const submit = async () => {
-    if (!original.trim() || !goal.trim()) return;
+    if (!purpose.trim()) return;
     setLoading(true);
     try {
-      const r = await run({ data: { originalMessage: original.trim(), goal: goal.trim(), tone } });
-      setSubject(r.subject); setBody(r.body); setAlts(r.alternatives); setNotes(r.safetyNotes);
-    } catch (e) {
-      toast.error((e as Error).message || "Failed");
-    } finally { setLoading(false); }
+      const r = await run({ data: { purpose: purpose.trim(), recipient, context, tone, length } });
+      setSubject(r.subject); setBody(r.body); setAlts(r.alternatives); setTips(r.tips);
+    } catch (e) { toast.error((e as Error).message || "Failed"); }
+    finally { setLoading(false); }
   };
 
   return (
     <div className="mx-auto max-w-6xl space-y-6 p-4 sm:p-6">
       <header>
-        <h1 className="text-2xl font-bold tracking-tight sm:text-3xl">Safe Email Generator</h1>
-        <p className="text-sm text-muted-foreground">Generate safe, professional responses to suspicious messages.</p>
+        <h1 className="text-2xl font-bold tracking-tight sm:text-3xl">Smart Email Generator</h1>
+        <p className="text-sm text-muted-foreground">Draft polished workplace emails in seconds.</p>
       </header>
       <Disclaimer />
 
@@ -54,36 +56,53 @@ function EmailGenPage() {
           <CardHeader><CardTitle>Inputs</CardTitle></CardHeader>
           <CardContent className="space-y-4">
             <div>
-              <Label>Original suspicious message</Label>
-              <Textarea value={original} onChange={(e) => setOriginal(e.target.value)} className="mt-1 min-h-[160px]" placeholder="Paste the message you received..." />
+              <Label>Purpose / what you want to say</Label>
+              <Textarea value={purpose} onChange={(e) => setPurpose(e.target.value)} className="mt-1 min-h-[120px]" placeholder="e.g. Follow up with a client after our product demo and propose next steps." />
+            </div>
+            <div className="grid gap-4 sm:grid-cols-2">
+              <div>
+                <Label>Recipient</Label>
+                <Input value={recipient} onChange={(e) => setRecipient(e.target.value)} className="mt-1" placeholder="Jane, Head of Marketing" />
+              </div>
+              <div>
+                <Label>Tone</Label>
+                <Select value={tone} onValueChange={(v) => setTone(v as Tone)}>
+                  <SelectTrigger className="mt-1"><SelectValue /></SelectTrigger>
+                  <SelectContent>
+                    {(["Formal", "Friendly", "Professional", "Concise", "Persuasive"] as const).map((t) => (
+                      <SelectItem key={t} value={t}>{t}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+              <div>
+                <Label>Length</Label>
+                <Select value={length} onValueChange={(v) => setLength(v as Length)}>
+                  <SelectTrigger className="mt-1"><SelectValue /></SelectTrigger>
+                  <SelectContent>
+                    {(["Short", "Medium", "Long"] as const).map((t) => (
+                      <SelectItem key={t} value={t}>{t}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
             </div>
             <div>
-              <Label>Response goal</Label>
-              <Textarea value={goal} onChange={(e) => setGoal(e.target.value)} className="mt-1 min-h-[80px]" />
+              <Label>Background / context (optional)</Label>
+              <Textarea value={context} onChange={(e) => setContext(e.target.value)} className="mt-1 min-h-[80px]" placeholder="Any relevant background, previous messages, etc." />
             </div>
-            <div>
-              <Label>Tone</Label>
-              <Select value={tone} onValueChange={(v) => setTone(v as Tone)}>
-                <SelectTrigger className="mt-1"><SelectValue /></SelectTrigger>
-                <SelectContent>
-                  {(["Formal", "Friendly", "Professional", "Assertive"] as const).map((t) => (
-                    <SelectItem key={t} value={t}>{t}</SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-            <Button onClick={submit} disabled={loading || !original.trim()}>
+            <Button onClick={submit} disabled={loading || !purpose.trim()}>
               {loading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Mail className="mr-2 h-4 w-4" />}
-              Generate response
+              Generate email
             </Button>
           </CardContent>
         </Card>
 
         <Card>
-          <CardHeader><CardTitle>Generated response</CardTitle><CardDescription>Edit before copying.</CardDescription></CardHeader>
+          <CardHeader><CardTitle>Generated email</CardTitle><CardDescription>Edit freely before sending.</CardDescription></CardHeader>
           <CardContent className="space-y-4">
             {!subject && !body ? (
-              <div className="grid place-items-center py-16 text-sm text-muted-foreground">Your response will appear here.</div>
+              <div className="grid place-items-center py-16 text-sm text-muted-foreground">Your email will appear here.</div>
             ) : (
               <>
                 <div>
@@ -95,16 +114,16 @@ function EmailGenPage() {
                 </div>
                 <div>
                   <Label>Body</Label>
-                  <Textarea value={body} onChange={(e) => setBody(e.target.value)} className="mt-1 min-h-[200px]" />
-                  <Button variant="outline" size="sm" className="mt-2" onClick={() => copy(body)}>
-                    <Copy className="mr-1.5 h-3.5 w-3.5" />Copy body
+                  <Textarea value={body} onChange={(e) => setBody(e.target.value)} className="mt-1 min-h-[260px]" />
+                  <Button variant="outline" size="sm" className="mt-2" onClick={() => copy(`Subject: ${subject}\n\n${body}`)}>
+                    <Copy className="mr-1.5 h-3.5 w-3.5" />Copy full email
                   </Button>
                 </div>
-                {notes.length > 0 && (
+                {tips.length > 0 && (
                   <div className="rounded-md border bg-muted/30 p-3 text-sm">
-                    <div className="mb-1 font-medium">Safety notes</div>
+                    <div className="mb-1 font-medium">Writing tips</div>
                     <ul className="list-disc space-y-1 pl-5 text-muted-foreground">
-                      {notes.map((n, i) => <li key={i}>{n}</li>)}
+                      {tips.map((n, i) => <li key={i}>{n}</li>)}
                     </ul>
                   </div>
                 )}

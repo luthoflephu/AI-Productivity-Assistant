@@ -7,8 +7,8 @@ export function Disclaimer({ className = "" }: { className?: string }) {
     >
       <Info className="mt-0.5 h-3.5 w-3.5 shrink-0 text-warning" />
       <span>
-        AI-generated scam assessments are advisory only and may not be fully accurate. Independently
-        verify information and consult official sources before making financial or security decisions.
+        AI-generated content may be inaccurate or incomplete. Always review, edit, and verify
+        important information before sharing or acting on it.
       </span>
     </div>
   );

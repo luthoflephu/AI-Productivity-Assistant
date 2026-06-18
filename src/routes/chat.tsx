@@ -2,7 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useChat } from "@ai-sdk/react";
 import { DefaultChatTransport, type UIMessage } from "ai";
 import { useEffect, useRef, useState } from "react";
-import { Send, Loader2, Trash2, ShieldCheck, User } from "lucide-react";
+import { Send, Loader2, Trash2, Sparkles, User } from "lucide-react";
 import ReactMarkdown from "react-markdown";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -12,12 +12,12 @@ import { toast } from "sonner";
 
 export const Route = createFileRoute("/chat")({ component: ChatPage });
 
-const STORAGE_KEY = "scamguard:chat";
+const STORAGE_KEY = "workflowai:chat";
 const SUGGESTIONS = [
-  "Is this email from my bank legit?",
-  "How do I spot a job offer scam on WhatsApp?",
-  "What should I do if I shared my password with a scammer?",
-  "Explain pig-butchering crypto scams.",
+  "Draft a follow-up email after a sales call.",
+  "Help me plan my week to ship a product launch.",
+  "Summarize key takeaways from a 1:1 with my manager.",
+  "Compare async vs sync standups for a remote team.",
 ];
 
 function loadInitial(): UIMessage[] {
@@ -62,8 +62,8 @@ function ChatPage() {
     <div className="mx-auto flex h-[calc(100vh-3.5rem)] max-w-4xl flex-col p-4 sm:p-6">
       <header className="mb-3 flex items-center justify-between gap-2">
         <div className="min-w-0">
-          <h1 className="text-xl font-bold tracking-tight sm:text-2xl">AI Scam Advisor</h1>
-          <p className="text-xs text-muted-foreground">Ask anything about scams, suspicious messages, and safety.</p>
+          <h1 className="text-xl font-bold tracking-tight sm:text-2xl">AI Chatbot</h1>
+          <p className="text-xs text-muted-foreground">Your workplace co-pilot for drafting, planning, and research.</p>
         </div>
         <Button variant="ghost" size="sm" onClick={clear} disabled={messages.length === 0}>
           <Trash2 className="mr-1.5 h-4 w-4" />Clear
@@ -75,10 +75,10 @@ function ChatPage() {
           {messages.length === 0 ? (
             <div className="flex h-full flex-col items-center justify-center gap-4 text-center">
               <div className="grid h-14 w-14 place-items-center rounded-2xl bg-primary/10 text-primary">
-                <ShieldCheck className="h-7 w-7" />
+                <Sparkles className="h-7 w-7" />
               </div>
               <div>
-                <div className="font-semibold">How can I help keep you safe today?</div>
+                <div className="font-semibold">How can I help you get more done today?</div>
                 <p className="mt-1 text-sm text-muted-foreground">Try one of these prompts:</p>
               </div>
               <div className="grid w-full max-w-xl gap-2 sm:grid-cols-2">
@@ -111,7 +111,7 @@ function ChatPage() {
               onKeyDown={(e) => {
                 if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); submit(); }
               }}
-              placeholder="Ask about a suspicious message, scam type, or safety practice..."
+              placeholder="Ask anything about your work..."
               className="min-h-[52px] resize-none"
             />
             <Button size="icon" onClick={() => submit()} disabled={busy || !input.trim()} aria-label="Send">
@@ -126,13 +126,11 @@ function ChatPage() {
 
 function MessageBubble({ message }: { message: UIMessage }) {
   const isUser = message.role === "user";
-  const text = message.parts
-    .map((p) => (p.type === "text" ? p.text : ""))
-    .join("");
+  const text = message.parts.map((p) => (p.type === "text" ? p.text : "")).join("");
   return (
     <div className={`flex gap-3 ${isUser ? "flex-row-reverse" : ""}`}>
       <div className={`grid h-8 w-8 shrink-0 place-items-center rounded-full ${isUser ? "bg-primary text-primary-foreground" : "bg-accent text-accent-foreground"}`}>
-        {isUser ? <User className="h-4 w-4" /> : <ShieldCheck className="h-4 w-4" />}
+        {isUser ? <User className="h-4 w-4" /> : <Sparkles className="h-4 w-4" />}
       </div>
       <div className={`max-w-[85%] rounded-2xl px-4 py-2.5 text-sm leading-relaxed ${isUser ? "bg-primary text-primary-foreground" : "bg-muted text-foreground"}`}>
         {isUser ? (
