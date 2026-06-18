@@ -9,15 +9,20 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as TasksRouteImport } from './routes/tasks'
 import { Route as SettingsRouteImport } from './routes/settings'
 import { Route as ResearchRouteImport } from './routes/research'
-import { Route as RecoveryRouteImport } from './routes/recovery'
+import { Route as MeetingsRouteImport } from './routes/meetings'
 import { Route as EmailRouteImport } from './routes/email'
 import { Route as ChatRouteImport } from './routes/chat'
-import { Route as AnalyzerRouteImport } from './routes/analyzer'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as ApiChatRouteImport } from './routes/api/chat'
 
+const TasksRoute = TasksRouteImport.update({
+  id: '/tasks',
+  path: '/tasks',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const SettingsRoute = SettingsRouteImport.update({
   id: '/settings',
   path: '/settings',
@@ -28,9 +33,9 @@ const ResearchRoute = ResearchRouteImport.update({
   path: '/research',
   getParentRoute: () => rootRouteImport,
 } as any)
-const RecoveryRoute = RecoveryRouteImport.update({
-  id: '/recovery',
-  path: '/recovery',
+const MeetingsRoute = MeetingsRouteImport.update({
+  id: '/meetings',
+  path: '/meetings',
   getParentRoute: () => rootRouteImport,
 } as any)
 const EmailRoute = EmailRouteImport.update({
@@ -41,11 +46,6 @@ const EmailRoute = EmailRouteImport.update({
 const ChatRoute = ChatRouteImport.update({
   id: '/chat',
   path: '/chat',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const AnalyzerRoute = AnalyzerRouteImport.update({
-  id: '/analyzer',
-  path: '/analyzer',
   getParentRoute: () => rootRouteImport,
 } as any)
 const IndexRoute = IndexRouteImport.update({
@@ -61,81 +61,88 @@ const ApiChatRoute = ApiChatRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/analyzer': typeof AnalyzerRoute
   '/chat': typeof ChatRoute
   '/email': typeof EmailRoute
-  '/recovery': typeof RecoveryRoute
+  '/meetings': typeof MeetingsRoute
   '/research': typeof ResearchRoute
   '/settings': typeof SettingsRoute
+  '/tasks': typeof TasksRoute
   '/api/chat': typeof ApiChatRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/analyzer': typeof AnalyzerRoute
   '/chat': typeof ChatRoute
   '/email': typeof EmailRoute
-  '/recovery': typeof RecoveryRoute
+  '/meetings': typeof MeetingsRoute
   '/research': typeof ResearchRoute
   '/settings': typeof SettingsRoute
+  '/tasks': typeof TasksRoute
   '/api/chat': typeof ApiChatRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
-  '/analyzer': typeof AnalyzerRoute
   '/chat': typeof ChatRoute
   '/email': typeof EmailRoute
-  '/recovery': typeof RecoveryRoute
+  '/meetings': typeof MeetingsRoute
   '/research': typeof ResearchRoute
   '/settings': typeof SettingsRoute
+  '/tasks': typeof TasksRoute
   '/api/chat': typeof ApiChatRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
-    | '/analyzer'
     | '/chat'
     | '/email'
-    | '/recovery'
+    | '/meetings'
     | '/research'
     | '/settings'
+    | '/tasks'
     | '/api/chat'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
-    | '/analyzer'
     | '/chat'
     | '/email'
-    | '/recovery'
+    | '/meetings'
     | '/research'
     | '/settings'
+    | '/tasks'
     | '/api/chat'
   id:
     | '__root__'
     | '/'
-    | '/analyzer'
     | '/chat'
     | '/email'
-    | '/recovery'
+    | '/meetings'
     | '/research'
     | '/settings'
+    | '/tasks'
     | '/api/chat'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  AnalyzerRoute: typeof AnalyzerRoute
   ChatRoute: typeof ChatRoute
   EmailRoute: typeof EmailRoute
-  RecoveryRoute: typeof RecoveryRoute
+  MeetingsRoute: typeof MeetingsRoute
   ResearchRoute: typeof ResearchRoute
   SettingsRoute: typeof SettingsRoute
+  TasksRoute: typeof TasksRoute
   ApiChatRoute: typeof ApiChatRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/tasks': {
+      id: '/tasks'
+      path: '/tasks'
+      fullPath: '/tasks'
+      preLoaderRoute: typeof TasksRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/settings': {
       id: '/settings'
       path: '/settings'
@@ -150,11 +157,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ResearchRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/recovery': {
-      id: '/recovery'
-      path: '/recovery'
-      fullPath: '/recovery'
-      preLoaderRoute: typeof RecoveryRouteImport
+    '/meetings': {
+      id: '/meetings'
+      path: '/meetings'
+      fullPath: '/meetings'
+      preLoaderRoute: typeof MeetingsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/email': {
@@ -169,13 +176,6 @@ declare module '@tanstack/react-router' {
       path: '/chat'
       fullPath: '/chat'
       preLoaderRoute: typeof ChatRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/analyzer': {
-      id: '/analyzer'
-      path: '/analyzer'
-      fullPath: '/analyzer'
-      preLoaderRoute: typeof AnalyzerRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/': {
@@ -197,12 +197,12 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  AnalyzerRoute: AnalyzerRoute,
   ChatRoute: ChatRoute,
   EmailRoute: EmailRoute,
-  RecoveryRoute: RecoveryRoute,
+  MeetingsRoute: MeetingsRoute,
   ResearchRoute: ResearchRoute,
   SettingsRoute: SettingsRoute,
+  TasksRoute: TasksRoute,
   ApiChatRoute: ApiChatRoute,
 }
 export const routeTree = rootRouteImport

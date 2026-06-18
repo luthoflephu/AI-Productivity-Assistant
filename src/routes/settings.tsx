@@ -5,7 +5,6 @@ import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { useTheme } from "@/lib/theme";
 import { Disclaimer } from "@/components/Disclaimer";
-import { clearHistory } from "@/lib/history";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/settings")({ component: SettingsPage });
@@ -16,7 +15,7 @@ function SettingsPage() {
     <div className="mx-auto max-w-3xl space-y-6 p-4 sm:p-6">
       <header>
         <h1 className="text-2xl font-bold tracking-tight sm:text-3xl">Settings</h1>
-        <p className="text-sm text-muted-foreground">Customize your ScamGuard AI experience.</p>
+        <p className="text-sm text-muted-foreground">Customize your WorkflowAI experience.</p>
       </header>
 
       <Card>
@@ -28,17 +27,12 @@ function SettingsPage() {
       </Card>
 
       <Card>
-        <CardHeader><CardTitle>Data</CardTitle><CardDescription>Your analysis history is stored locally in this browser.</CardDescription></CardHeader>
+        <CardHeader><CardTitle>Data</CardTitle><CardDescription>Your chat history is stored locally in this browser.</CardDescription></CardHeader>
         <CardContent className="flex flex-wrap items-center justify-between gap-3">
-          <p className="text-sm text-muted-foreground">Clear analysis history and chat data.</p>
-          <div className="flex gap-2">
-            <Button variant="outline" onClick={() => { clearHistory(); toast.success("Analysis history cleared"); }}>
-              Clear analysis history
-            </Button>
-            <Button variant="outline" onClick={() => { localStorage.removeItem("scamguard:chat"); toast.success("Chat cleared"); }}>
-              Clear chat
-            </Button>
-          </div>
+          <p className="text-sm text-muted-foreground">Clear locally stored chat data.</p>
+          <Button variant="outline" onClick={() => { localStorage.removeItem("workflowai:chat"); toast.success("Chat cleared"); }}>
+            Clear chat
+          </Button>
         </CardContent>
       </Card>
 
@@ -47,7 +41,9 @@ function SettingsPage() {
         <CardContent className="space-y-3">
           <Disclaimer />
           <p className="text-sm text-muted-foreground">
-            ScamGuard AI uses large language models to assess content. Outputs include confidence scores and may be inaccurate. Always verify with official sources (your bank, employer, government agency) before taking financial or security action.
+            WorkflowAI uses large language models to draft and summarize content. Output may be
+            inaccurate, biased, or out of date. Always review and edit AI-generated content before
+            sending, sharing, or acting on it — especially for legal, financial, or HR matters.
           </p>
         </CardContent>
       </Card>

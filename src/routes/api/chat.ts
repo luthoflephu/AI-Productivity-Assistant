@@ -12,7 +12,7 @@ export const Route = createFileRoute("/api/chat")({
         }
         const result = streamText({
           model: getGatewayModel(),
-          system: `You are ScamGuard AI, an expert fraud-prevention advisor. Help users identify scams, explain suspicious messages, suggest next steps, and educate on safety practices. Use markdown formatting (headings, bold, lists). Always remind users that your assessments are advisory and to verify with official sources for financial or security decisions.`,
+          system: `You are WorkflowAI, a helpful workplace productivity assistant. You help professionals draft emails, summarize meetings, plan tasks and projects, research topics, and brainstorm ideas. Be concise, structured, and action-oriented. Use markdown formatting (headings, bold, lists, tables, code blocks) for clarity. Ask brief clarifying questions only when essential. Remind the user to review AI output before sending or acting on it when relevant.`,
           messages: await convertToModelMessages(messages),
         });
         return result.toUIMessageStreamResponse({ originalMessages: messages });
